@@ -1,0 +1,21 @@
+Package: actino
+Type: Package
+Title: Phyloseq utilities for personal microbiome
+Version: 0.1.0
+Author: Richard Sprague
+Authors@R: person("Richard", "Sprague", email = "sprague@ubiome.com",
+  role = c("aut", "cre"))
+Maintainer: Richard Sprague <sprague@ubiome.com>
+Description: Convert JSON and CSV files to a format usable by the Phyloseq package of BioConductor.
+License: MIT License
+Encoding: UTF-8
+LazyData: true
+Imports:
+    phyloseq,
+    dplyr,
+    tidyr,
+    jsonlite,
+    readxl,
+    utils
+RoxygenNote: 5.0.1
+Suggests: testthat

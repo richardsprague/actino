@@ -1,0 +1,15 @@
+---
+title: "README"
+author: "Richard Sprague"
+date: "1/30/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Getting Started
+
+This package helps you read and manipulate microbiome files in the open source package Phyloseq.
+
