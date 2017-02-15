@@ -153,9 +153,9 @@ read_ubiome_json<-function(fname,rank="genus",count.normalized=FALSE){
 #' @importFrom dplyr full_join
 #' @export
 join_all_ubiome_files_full <- function(flist,count.normalized=FALSE,site="gut"){
-  f.all<-read_ubiome_json_full(flist[1],count.normalized,site )
+  f.all<-read_ubiome_json_full(flist[1],count.normalized )
   for(f in flist[-1]){
-    f.part<-read_ubiome_json_full(f,count.normalized,site)
+    f.part<-read_ubiome_json_full(f,count.normalized)
     if(nrow(f.part)>0 & nrow(f.all)>0)  f.all<-full_join(f.all,f.part)
     else if (nrow(f.part)>0 & nrow(f.all)==0) f.all<-f.part
   }

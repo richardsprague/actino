@@ -32,7 +32,10 @@ samples_as_column_dataframe <- function (DF) {
   #     first col: tax_name
   #     other cols : SSRs (aka sample names)
   #     rows : taxa names (e.g. Bifidobacterium, etc.)
-  t = DF %>% select(tax_name, ssr, count) %>% spread(ssr,count)
+
+  cols <- names(DF)
+  SSR <- match("ssr",cols)
+  t = DF %>% select(tax_name, SSR, count) %>% spread(ssr,count)
   t[is.na(t)]<-0 # replace NA with 0
   return(t)
 }
