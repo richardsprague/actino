@@ -16,6 +16,7 @@
 #' @param DF data frame with columns: SSR, tax_name, count, (optional) tax_rank
 #' @importFrom tidyr %>% spread
 #' @importFrom dplyr select count
+#' @export
 samples_as_column_dataframe <- function (DF) {
   # Convenience function to make a dataframe where sample names are in columns, not rows
   #
@@ -31,7 +32,7 @@ samples_as_column_dataframe <- function (DF) {
   #     first col: tax_name
   #     other cols : SSRs (aka sample names)
   #     rows : taxa names (e.g. Bifidobacterium, etc.)
-  t = DF %>% select(tax_name,ssr,count) %>% spread(ssr,count)
+  t = DF %>% select(tax_name, ssr, count) %>% spread(ssr,count)
   t[is.na(t)]<-0 # replace NA with 0
   return(t)
 }
@@ -47,7 +48,7 @@ samples_as_column_dataframe <- function (DF) {
 #' @examples simple.df <- data.frame(tax_name=c("taxa1"),"1234"=c(2352))
 #' simple.map <- data.frame(ssr=c(1234))
 #' @export
-experiment_to_phyloseq <- function(experiment.df, mapfile, rank="Genus"){
+experiment_to_phyloseq <- function(experiment.df, mapfile, rank="genus"){
   # convert a uBiome experiment dataframe and mapping file to a valid phyloseq object
   #
   # Args:
@@ -55,7 +56,7 @@ experiment_to_phyloseq <- function(experiment.df, mapfile, rank="Genus"){
   #   mapfile:
   #   rank: (not used currently -- just assumes everything is always just genus)
   #
-  e <- samples_as_column_dataframe(experiment.df)
+  e <- experiment.df %>% filter(tax_rank == rank) %>% samples_as_column_dataframe()
   ssrs <- unique(experiment.df$ssr)
   e.map <- mapfile[match(ssrs,mapfile$ssr),]
   row.names(e.map)<-e.map$ssr

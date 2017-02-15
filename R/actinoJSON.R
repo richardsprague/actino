@@ -72,7 +72,7 @@ convert_json_files_to_csv <- function(pattern= "[[:alnum:]].json", directory=get
 #' @export
 just_json_files_in<-function(d){
   #json_files_in_directory <-
-  list.files(d, full.names = TRUE, pattern="[[:alnum:]].json")
+  list.files(d, full.names = TRUE, pattern="[[:alnum:]].json") #todo: prevent tilde at end of line.
 }
 
 
@@ -163,4 +163,43 @@ join_all_ubiome_files_full <- function(flist,count.normalized=FALSE,site="gut"){
 }
 
 
+#' return a valid Phyloseq object created from the JSON files in flist and an Excel formatted mapfile
+#'
+#' @param flist character vector of file names
+#' @param mapfile XLSX filename that contains mapping info for the same SSRS in flist
+#' @param rank taxonomical rank (generally "genus" or "family" or "species")
+#' @return valid Phyloseq object
+#' @importFrom readxl read_excel
+#' @export
+phyloseq_from_JSON_at_rank <- function(flist, mapfile, rank="genus") {
+  # return a valid Phyloseq object created from the JSON files in flist and an Excel formatted mapfile
+  # Args:
+  #   flist: character vector of file names.
+  #   mapfile: XLSX filename that contains mapping info for the same SSRS in flist
+  # Returns:  valid Phyloseq object
+
+  f.all <- join_all_ubiome_files(flist,rank)
+  f.all[is.na(f.all)] <- 0
+  f.mat <- f.all[, c(-1,-2)] %>% matrix()
+  ssrs<-sapply(strsplit(names(f.all)[c(-1,-2)],"\\$"),function(x) as.numeric(x[2]))
+
+  #names(f.mat)[2:(length(f.mat)-1)] <- ssrs
+  map <- read_excel(mapfile)
+  map.data <-
+    map[match(ssrs, map$SSR), which(colnames(map) %in% c("SSR", "Username", "Site", "Date", "Geo", "Label"))]
+  row.names(map.data) <- map.data$SSR # todo: maybe delete this line?  not necessary to set rownames?
+  f.taxtable <-
+    phyloseq::build_tax_table(lapply(f.all$tax_name, phyloseq::parse_taxonomy_default))
+  dimnames(f.taxtable)[[1]] <- f.all$tax_name
+  f.biome <- as.matrix(f.all[,c(-1,-2)])
+  colnames(f.biome) <- ssrs
+  rownames(f.biome) <- f.all$tax_name
+
+  return(phyloseq::phyloseq(
+    phyloseq::otu_table(f.biome, taxa_are_rows = TRUE),
+    phyloseq::sample_data(map.data),
+    phyloseq::tax_table(f.taxtable)
+  ))
+
+}
 

@@ -4,7 +4,7 @@
 \alias{experiment_to_phyloseq}
 \title{convert a uBiome experiment dataframe and mapping file to a valid phyloseq object}
 \usage{
-experiment_to_phyloseq(experiment.df, mapfile, rank = "Genus")
+experiment_to_phyloseq(experiment.df, mapfile, rank = "genus")
 }
 \arguments{
 \item{experiment.df}{dataframe representation of a uBiome experiment. Rows are unique ssrs.}
