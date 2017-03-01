@@ -1,11 +1,7 @@
 # actino.R
 # loads the data needed by the app
-
-kombucha.csv <- read.csv("./data/kombucha/ubiome-export-74607.csv")
-
-#devtools::use_data(kombucha.csv, overwrite = TRUE)
-
-#devtools::document()
+# Also use this as the starting point if you want to change something
+# source this file (beware of what you're uncommenting) and then run the autotest at the end.
 
 library(dplyr)
 library(tidyr)
@@ -13,29 +9,33 @@ library(phyloseq)
 library(readxl)
 library(actino)
 library(jsonlite)
+library(testthat)
 
-debugSource("R/actinoCSV.r")
-debugSource("R/actinoJSON.r")
+# if you want to hand-assemble the functions from the package:
+# debugSource("R/actinoCSV.r")
+# debugSource("R/actinoJSON.r")
 
-#kombucha.csv$ssr <- "000"
+DATA_DIR <- system.file("extdata", package = "actino") # "../../inst/extdata"
+
+kombucha.csv <- read.csv(paste0(DATA_DIR,"/ubiome-export-74607.csv"))
+
+# Uncomment the following lines to save the data to the package
+#devtools::use_data(kombucha.csv, overwrite = TRUE)
+
+# Uncomment this line to generate all the documentation
+devtools::document()
+
+
+# Next, assemble a dataframe and associated mapfile and then create a new phyloseq object
 kombucha.csv$ssr <- 0000
 mapfile <- data.frame(ssr = c(0), Username = c("testPerson"))
 
-
-# k.genus <- kombucha.csv %>% filter(tax_rank=="genus")
-# k <- k.genus %>% select(tax_name,ssr,count) %>% spread(tax_name,count)
-# k[is.na(k)] <- 0
-#
-# #k <- kombucha.csv %>% filter(tax_rank=="genus") %>% select(tax_name, ssr, tax_rank, count)  %>% spread(tax_name,count)
-#
-#
-# k <- samples_as_column_dataframe(k.genus)
-
 p <- experiment_to_phyloseq(kombucha.csv,mapfile)
 
-#kombucha.all <- join_all_ubiome_files(just_json_files_in("./data/kombucha"))
-kombucha <- phyloseq_from_JSON_at_rank(just_json_files_in("./data/kombucha"),"./data/kombucha/kombucha-mapfile.xlsx")
+kombucha <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
 
 #devtools::use_data(kombucha, overwrite = TRUE)
+
+# this line is useful for interactive testing:
 
 auto_test("./R","./tests/testthat")

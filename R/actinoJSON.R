@@ -14,17 +14,24 @@
 #install.packages("jsonlite")
 
 
-tax_abbrev<-function(tax_rank){
+#' @title returns the abbreviated character form of the character vector "tax_rank"
+#' @description Needed by functions that convert tax_names to QIIME (or other) format.
+#' @param tax_rank a character vector (e.g. "genus")
+#' @param inverse if true, return the full tax_rank when given the abbreviated version
+#' @export
+tax_abbrev<-function(tax_rank, inverse=FALSE){
   # returns the abbreviated character form of the character vector "tax_rank"
   # Needed by functions that convert tax_names to QIIME (or other) format.
   # Args:
   #   tax_rank: a character vector (e.g. "genus")
   # Returns:
   #   A one character abbreviation of tax_rank (e.g. "g")
-  taxes<-unlist(strsplit("root superkingdom genus species order family phylum class superphylum subclass suborder no_rank species_group", split=" "))
-  tax_abbrev<-unlist(strsplit("r k g s o f p c l k r n g", split=" "))
+  taxes<-unlist(strsplit("root superkingdom genus species order family phylum class superphylum subclass suborder no_rank species_group subgenus subphylum subkingdom", split=" "))
+  tax_abbrev<-unlist(strsplit("r k g s o f p c l 1 r n h i 3 2", split=" "))
   tax<-data.frame(taxes,tax_abbrev)
-  as.character(tax[tax$taxes==tax_rank,2])
+  ifelse(inverse!=FALSE,
+          as.character(tax[tax$tax_abbrev==tax_rank,1]),
+          as.character(tax[tax$taxes==tax_rank,2]))
 }
 
 full_taxa<- function(df,taxaRow){
@@ -46,6 +53,26 @@ full_taxa<- function(df,taxaRow){
       )
     )
 
+}
+
+#' @title find tax_rank for a given full taxa
+#' @description opposite function for full_taxa(). Return a list [tax_name, tax_rank]
+#' @param parse_taxon string representation for qiime full taxonomy for this taxon
+#' @export
+tax_rank_of_full_taxa <- function(parse_taxon){
+# typical input: "Root;n__cellular organisms;k__Bacteria;p__Proteobacteria;c__Betaproteobacteria;o__Burkholderiales;f__Alcaligenaceae"
+# correct output: list(family,"Alcaligenaceae")
+
+  s = strsplit(parse_taxon,";")
+  t = s[[1]][length(s[[1]])]  # last element of s
+  if(t=="Root")
+    return(list("Root","Root"))
+  u = strsplit(t,"__")
+  return(list(tax_abbrev(u[[1]][1],inverse=TRUE),u[[1]][2]))
+
+  if(parse_taxon == "Root;n__cellular organisms;k__Bacteria;p__Proteobacteria;c__Betaproteobacteria;o__Burkholderiales;f__Alcaligenaceae")
+    return(list("family","Alcaligenaceae"))
+   parse_taxon
 }
 
 #' @title Convert to CSV all uBiome JSON files in a directory.
@@ -77,7 +104,14 @@ just_json_files_in<-function(d){
 
 
 
-#returns a big dataframe joining all tax_names from a list of JSON files
+#' @title  returns a big dataframe joining all tax_names from a list of JSON files
+#' @description returns a big dataframe joining all tax_names from a list of JSON files
+#' @param flist list of file pathnames, each pointing to a uBiome JSON file
+#' @param count.normalized use the count_norm field instead of raw read numbers (default is FALSE)
+#' @param site character vector
+#' @return data frame where first col is all taxa names, other cols are samples
+#' @importFrom dplyr full_join
+#' @export
 join_all_ubiome_files <- function(flist,tax_rank="genus",count.normalized=FALSE){
   f.all<-read_ubiome_json(flist[1],rank=tax_rank,count.normalized)
   for(f in flist[-1]){

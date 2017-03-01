@@ -32,3 +32,27 @@ test_that("create Phyloseq object from a directory of json files",{
   expect_equivalent(p,pj)
 
 })
+
+
+test_that("tax_abbrev returns correct shortened abbrev for a tax_rank",{
+  expect_equal(tax_abbrev("genus"),"g")
+  expect_equal(tax_abbrev("family"),"f")
+  expect_equal(tax_abbrev("s",inverse=TRUE),"species")
+  expect_equal(tax_abbrev("r",inverse=TRUE),"root")
+  expect_equal(tax_abbrev("i",inverse=TRUE),"subgenus")
+  expect_equal(tax_abbrev("k",inverse=TRUE),"superkingdom")
+  expect_equal(tax_abbrev("subphylum"),"3")
+})
+
+test_that("Unpacking a qiime taxa returns correct tax_name and rank",{
+  sample_taxon = "Root;n__cellular organisms;k__Bacteria;p__Proteobacteria;c__Betaproteobacteria;o__Burkholderiales;f__Alcaligenaceae"
+  sample_taxon2 = "Root;n__cellular organisms;k__Bacteria;p__Proteobacteria;c__Gammaproteobacteria;o__Enterobacteriales;f__Enterobacteriaceae;g__Kluyvera"
+  sample_taxon3 = "Root;n__cellular organisms;k__Bacteria;p__Actinobacteria;c__Actinobacteria;k__Actinobacteridae;o__Actinomycetales;r__Corynebacterineae;f__Corynebacteriaceae;g__Corynebacterium;s__Corynebacterium sp. NML 97-0186"
+  expect_equal(tax_rank_of_full_taxa(sample_taxon2),list("genus","Kluyvera"))
+  expect_equal(tax_rank_of_full_taxa(sample_taxon),
+                                     list("family","Alcaligenaceae"))
+  expect_equal(tax_rank_of_full_taxa("Root"),list("Root","Root"))
+  expect_equal(tax_rank_of_full_taxa(sample_taxon3),list("species","Corynebacterium sp. NML 97-0186"))
+}
+)
+

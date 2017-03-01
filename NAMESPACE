@@ -2,10 +2,13 @@
 
 export(convert_json_files_to_csv)
 export(experiment_to_phyloseq)
+export(join_all_ubiome_files)
 export(join_all_ubiome_files_full)
 export(just_json_files_in)
 export(phyloseq_from_JSON_at_rank)
 export(samples_as_column_dataframe)
+export(tax_abbrev)
+export(tax_rank_of_full_taxa)
 importFrom(dplyr,count)
 importFrom(dplyr,filter)
 importFrom(dplyr,full_join)
