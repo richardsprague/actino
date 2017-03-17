@@ -2,6 +2,7 @@
 # test that it's a proper phyloseq object
 
 library(phyloseq)
+library(actino)
 context("Prove it's a proper phyloseq object")
 
 DATA_DIR <- system.file("extdata", package = "actino") # "../../inst/extdata"
