@@ -34,7 +34,7 @@ p <- experiment_to_phyloseq(kombucha.csv,mapfile)
 
 kombucha <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
 
-#devtools::use_data(kombucha, overwrite = TRUE)
+devtools::use_data(kombucha, overwrite = TRUE)
 
 # this line is useful for interactive testing:
 

@@ -13,6 +13,7 @@
 # the following packages must be loaded before using this function
 #install.packages("jsonlite")
 
+MAPFILE_ATTRIBUTES = c("SSR", "Username", "Site", "Date", "Geo", "Label", "Notes")
 
 #' @title returns the abbreviated character form of the character vector "tax_rank"
 #' @description Needed by functions that convert tax_names to QIIME (or other) format.
@@ -220,7 +221,7 @@ phyloseq_from_JSON_at_rank <- function(flist, mapfile, rank="genus") {
   #names(f.mat)[2:(length(f.mat)-1)] <- ssrs
   map <- read_excel(mapfile)
   map.data <-
-    map[match(ssrs, map$SSR), which(colnames(map) %in% c("SSR", "Username", "Site", "Date", "Geo", "Label"))]
+    map[match(ssrs, map$SSR), which(colnames(map) %in% MAPFILE_ATTRIBUTES)]
   row.names(map.data) <- map.data$SSR # todo: maybe delete this line?  not necessary to set rownames?
   f.taxtable <-
     phyloseq::build_tax_table(lapply(f.all$tax_name, phyloseq::parse_taxonomy_default))
