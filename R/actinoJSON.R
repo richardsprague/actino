@@ -108,15 +108,17 @@ just_json_files_in<-function(d){
 #' @title  returns a big dataframe joining all tax_names from a list of JSON files
 #' @description returns a big dataframe joining all tax_names from a list of JSON files
 #' @param flist list of file pathnames, each pointing to a uBiome JSON file
+#' @param tax_rank taxonomic rank to read. Default is "genus"
 #' @param count.normalized use the count_norm field instead of raw read numbers (default is FALSE)
-#' @param site character vector
 #' @return data frame where first col is all taxa names, other cols are samples
 #' @importFrom dplyr full_join
 #' @export
 join_all_ubiome_files <- function(flist,tax_rank="genus",count.normalized=FALSE){
-  f.all<-read_ubiome_json(flist[1],rank=tax_rank,count.normalized)
+  f.all <- read_ubiome_json(flist[1],rank=tax_rank,count.normalized = count.normalized)
+  #f.all <- rbind(f.all, read_ubiome_json(flist[1], rank = "root", count.normalized = count.normalized))
   for(f in flist[-1]){
     f.part<-read_ubiome_json(f,rank=tax_rank,count.normalized)
+    # test: # f.part<-read_ubiome_json_full(f,count.normalized)
     if(nrow(f.part)>0 & nrow(f.all)>0)  f.all<-full_join(f.all,f.part)
     else if (nrow(f.part)>0 & nrow(f.all)==0) f.all<-f.part
   }
@@ -171,7 +173,9 @@ read_ubiome_json<-function(fname,rank="genus",count.normalized=FALSE){
 
 
   rj<-filter(j[["ubiome_bacteriacounts"]],tax_rank==rank)
+  #p<-apply(rj,1,function (x) full_taxa(rj,x))
   r<- data.frame(rj$tax_name,rj$tax_rank,reads=if(count.normalized) rj$count_norm else rj$count,stringsAsFactors = FALSE)
+
 
   names(r)<-c("tax_name","tax_rank",name_for_sample(j$sampling_time,j$notes,j$sequencing_revision))
   return(r)
@@ -225,6 +229,7 @@ phyloseq_from_JSON_at_rank <- function(flist, mapfile, rank="genus") {
   row.names(map.data) <- map.data$SSR # todo: maybe delete this line?  not necessary to set rownames?
   f.taxtable <-
     phyloseq::build_tax_table(lapply(f.all$tax_name, phyloseq::parse_taxonomy_default))
+  colnames(f.taxtable) <- c(Hmisc::upFirst(rank))
   dimnames(f.taxtable)[[1]] <- f.all$tax_name
   f.biome <- as.matrix(f.all[,c(-1,-2)])
   colnames(f.biome) <- ssrs

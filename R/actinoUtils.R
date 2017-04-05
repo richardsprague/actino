@@ -4,6 +4,7 @@
 #' @description turn a uBIome data frame into a matrix at a specific rank
 #' @param df a well-formed dataframe created by join_all_ubiome_files_full
 #' @param rank tax_rank (default = "genus")
+#' @importFrom stats na.omit
 #' @export
 dataframe_at_rank <- function(df, rank="genus" ){
   z <- lapply(df[,1],function(x) {

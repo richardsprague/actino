@@ -22,4 +22,5 @@ test_that("matrix at rank shows correct items",{
   m <- matrix_at_rank(a, rank = "genus")
   expect_equal(nrow(m),83)
   expect_equal(m[6,2],4300)
+  expect_equal(matrix_at_rank(a, rank = "Root")[1,1],67550)
 })

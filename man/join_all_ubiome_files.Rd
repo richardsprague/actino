@@ -9,9 +9,9 @@ join_all_ubiome_files(flist, tax_rank = "genus", count.normalized = FALSE)
 \arguments{
 \item{flist}{list of file pathnames, each pointing to a uBiome JSON file}
 
-\item{count.normalized}{use the count_norm field instead of raw read numbers (default is FALSE)}
+\item{tax_rank}{taxonomic rank to read. Default is "genus"}
 
-\item{site}{character vector}
+\item{count.normalized}{use the count_norm field instead of raw read numbers (default is FALSE)}
 }
 \value{
 data frame where first col is all taxa names, other cols are samples

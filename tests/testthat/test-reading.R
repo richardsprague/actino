@@ -12,6 +12,7 @@ test_that("sample CSV file can be read",{
   expect_equal(exists("kombucha.csv"),TRUE)
   expect_equal(exists("k"),TRUE)
   expect_equal(k[k$tax_name=="Firmicutes",]$count, 47447)
+  expect_equal(k[k$tax_name == "root",]$count, 77768)
 })
 
 #print(list.files("../../inst/extdata"))
@@ -22,6 +23,8 @@ test_that("object can be created from csv file",{
   mapfile <- data.frame(ssr = c(0), Username = c("testPerson"))
   p <- experiment_to_phyloseq(c,mapfile)
   expect_equal(as.numeric(otu_table(p)[11]),1540)
+  expect_equal(colnames(tax_table(p)), "Genus")
+  expect_equal(rownames(tax_table(p))[1:3],c("g__Acetitomaculum","g__Acidaminococcus","g__Actinomyces"))
 
 })
 

@@ -27,6 +27,20 @@ test_that("Phyloseq object has correct number of samples",{
   expect_equal(nsamples(p),19)
 })
 
+test_that("Phyloseq tax_table has correct rank names",{
+
+  expect_equal(colnames(tax_table(pj)), "Genus")
+  #expect_equal(colnames(tax_table(pj)), c("Root","Genus"))
+  expect_equal(colnames(tax_table(p)), "Genus")
+
+})
+
+
+test_that("Phyloseq object has correct rank names",{
+  expect_equal(rownames(tax_table(pj))[1:3], c("Flavobacterium","Kluyvera","Bacteroides"))
+})
+
+
 test_that("create Phyloseq object from a directory of json files",{
   expect_equal(length(just_json_files_in(DATA_DIR)),19)
   pj <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
