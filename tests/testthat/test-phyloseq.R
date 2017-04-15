@@ -12,8 +12,8 @@ p <- kombucha
 pj <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
 
 test_that(paste("Current directory=",getwd()),{
-  print("running phyloseq tests now")
-  print(getwd())
+  #print("running phyloseq tests now")
+  #print(getwd())
   #expect_equal(TRUE,FALSE)
 })
 
@@ -49,6 +49,17 @@ test_that("create Phyloseq object from a directory of json files",{
 
 })
 
+test_that("create full Phyloseq object from a directory of json files",{
+  jsonFileList <- just_json_files_in(DATA_DIR)[1:3]
+  expect_equal(length(jsonFileList),3)
+  pj <- phyloseq_from_JSON(jsonFileList,paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
+  expect_equal(get_taxa_unique(pj,taxonomic.rank = "Rank1"),"Root")
+  firmicutes <- subset_taxa(pj, Phylum=="Firmicutes")
+  expect_equal(length(otu_table(firmicutes)[,2]),109)
+  expect_equal(as.numeric(otu_table(firmicutes)[1,2]),4300) # abundance of Roseburia in first sample
+
+})
+
 test_that("correct metadata is loaded into phyloseq object",{
   #pj <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
   expect_equal(as.character(sample_data(kombucha)[9,5]),"pizza")
@@ -62,6 +73,12 @@ test_that("tax_abbrev returns correct shortened abbrev for a tax_rank",{
   expect_equal(tax_abbrev("i",inverse=TRUE),"subgenus")
   expect_equal(tax_abbrev("k",inverse=TRUE),"superkingdom")
   expect_equal(tax_abbrev("subphylum"),"3")
+})
+
+test_that("full_taxa returns correct qiime-formated name for a taxa",{
+ expect_equal(full_taxa(kombucha.csv,kombucha.csv[3,]), "Root;n__cellular organisms;k__Bacteria;p__Proteobacteria;3__delta/epsilon subdivisions;c__Epsilonproteobacteria;o__Campylobacterales;f__Campylobacteraceae;g__Campylobacter")
+ #expect_equal(full_taxa(kombucha.csv,as.list(kombucha.csv[3,])),"Root;n__cellular organisms;k__Bacteria;p__Proteobacteria;3__delta/epsilon subdivisions;c__Epsilonproteobacteria;o__Campylobacterales;f__Campylobacteraceae;g__Campylobacter")
+
 })
 
 test_that("Unpacking a qiime taxa returns correct tax_name and rank",{

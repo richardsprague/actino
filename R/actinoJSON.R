@@ -36,20 +36,27 @@ tax_abbrev<-function(tax_rank, inverse=FALSE){
 }
 
 full_taxa<- function(df,taxaRow){
+  # taxaRow: list
   # # given a row taxaRow in df, return a character vector showing the full set of tax_ranks
+  # taxaRow = as.data.frame(t(taxaRow))
+  # parent = as.numeric(taxaRow[match("parent",names(df))])#taxaRow[2])
+  # taxName = taxaRow[,match("tax_name",names(df))] #taxaRow[5]
+  # taxRank = taxaRow[,match("tax_rank",names(df)),] # taxaRow[6]
+  parent = as.numeric(taxaRow["parent"])
+  taxName = as.character(unlist(taxaRow["tax_name"]))
+  taxRank = as.character(unlist(taxaRow["tax_rank"]))
 
-  parent = as.numeric(taxaRow[match("parent",names(df))])#taxaRow[2])
-  taxName = taxaRow[match("tax_name",names(df))] #taxaRow[5]
-  taxRank = taxaRow[match("tax_rank",names(df))] # taxaRow[6]
+
+
   if(is.na(taxName)){browser(text="Null Taxname")} # some kind of error occurred.
   if(taxName == "root")
     return("Root")
   else
     return(
-      paste(full_taxa(df,as.character(df[df$taxon==parent,])),
+      paste(full_taxa(df,as.list(df[df$taxon == parent,])),#t(df[df$taxon==parent,])),
             ";",
-            tax_abbrev(taxRank),"__",
-            taxName,
+            tax_abbrev(as.character(taxRank)),"__",
+            as.character(taxName),
             sep=""
       )
     )
@@ -142,7 +149,8 @@ read_ubiome_json_full<-function(fname,count.normalized=FALSE){
   j<-fromJSON(fname)
 
   rj<-j[["ubiome_bacteriacounts"]]
-  p<-apply(rj,1,function (x) full_taxa(rj,x))
+  #p<-apply(rj,1,function (x) full_taxa(rj,as.data.frame(t(x))))
+  p<-apply(rj,1,function (x) full_taxa(rj,as.list(x)))
   rj$tax_name<-p  # new column stores the whole tax path for each organism
   r<-data.frame(tax_name=rj$tax_name,
                 reads=if(count.normalized) rj$count_norm else rj$count,
@@ -172,10 +180,11 @@ read_ubiome_json<-function(fname,rank="genus",count.normalized=FALSE){
   j<-fromJSON(fname)
 
 
-  rj<-filter(j[["ubiome_bacteriacounts"]],tax_rank==rank)
-  #p<-apply(rj,1,function (x) full_taxa(rj,x))
-  r<- data.frame(rj$tax_name,rj$tax_rank,reads=if(count.normalized) rj$count_norm else rj$count,stringsAsFactors = FALSE)
+  rj<-filter(j[["ubiome_bacteriacounts"]],tax_rank == rank)
+  #p<-apply(rj,1,function (x) full_taxa(rj,as.list(x)))
 
+  r<- data.frame(rj$tax_name,rj$tax_rank,reads=if(count.normalized) rj$count_norm else rj$count,stringsAsFactors = FALSE)
+ # r<- data.frame(p,rj$tax_rank,reads=if(count.normalized) rj$count_norm else rj$count,stringsAsFactors = FALSE)
 
   names(r)<-c("tax_name","tax_rank",name_for_sample(j$sampling_time,j$notes,j$sequencing_revision))
   return(r)
@@ -217,7 +226,7 @@ phyloseq_from_JSON_at_rank <- function(flist, mapfile, rank="genus") {
   #   mapfile: XLSX filename that contains mapping info for the same SSRS in flist
   # Returns:  valid Phyloseq object
 
-  f.all <- join_all_ubiome_files(flist,rank)
+  f.all <- join_all_ubiome_files(flist,tax_rank = rank)
   f.all[is.na(f.all)] <- 0
   f.mat <- f.all[, c(-1,-2)] %>% matrix()
   ssrs<-sapply(strsplit(names(f.all)[c(-1,-2)],"\\$"),function(x) as.numeric(x[2]))
@@ -243,3 +252,42 @@ phyloseq_from_JSON_at_rank <- function(flist, mapfile, rank="genus") {
 
 }
 
+#' @title Make Phyloseq object from JSON files
+#' @description  return a valid Phyloseq object created from the JSON files in flist and an Excel formatted mapfile
+#' @param flist character vector of file names
+#' @param mapfile XLSX filename that contains mapping info for the same SSRS in flist
+#' @return valid Phyloseq object
+#' @importFrom readxl read_excel
+#' @export
+phyloseq_from_JSON <- function(flist, mapfile) {
+  # return a valid Phyloseq object created from the JSON files in flist and an Excel formatted mapfile
+  # Args:
+  #   flist: character vector of file names.
+  #   mapfile: XLSX filename that contains mapping info for the same SSRS in flist
+  # Returns:  valid Phyloseq object
+
+  f.all <- join_all_ubiome_files_full(flist)
+  f.all[is.na(f.all)] <- 0
+  f.mat <- f.all[, -1] %>% matrix()
+  ssrs<-sapply(strsplit(names(f.all)[-1],"\\$"),function(x) as.numeric(x[2]))
+
+  map <- read_excel(mapfile)
+  map.data <-
+    map[match(ssrs, map$SSR), which(colnames(map) %in% MAPFILE_ATTRIBUTES)]
+
+  row.names(map.data) <- map.data$SSR # todo: maybe delete this line?  not necessary to set rownames?
+  f.taxtable <-
+    phyloseq::build_tax_table(lapply(f.all$tax_name, phyloseq::parse_taxonomy_qiime))
+
+  #dimnames(f.taxtable)[[1]] <- f.all$tax_name
+  taxa_names(f.taxtable) <- f.all$tax_name
+  f.biome <- as.matrix(f.all[,-1])
+  colnames(f.biome) <- ssrs
+  rownames(f.biome) <- f.all$tax_name
+
+  return(phyloseq::phyloseq(
+    phyloseq::otu_table(f.biome, taxa_are_rows = TRUE),
+    phyloseq::sample_data(map.data),
+    phyloseq::tax_table(f.taxtable)
+  ))
+}
