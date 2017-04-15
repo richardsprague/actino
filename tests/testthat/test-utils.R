@@ -11,7 +11,7 @@ a <- join_all_ubiome_files_full(just_json_files_in(DATA_DIR)[1:2])
 a[is.na(a)] <- 0
 
 ssrs<-sapply(strsplit(names(a)[c(-1)],"\\$"),function(x) as.numeric(x[2]))
-p <- kombucha
+p <- kombucha.genus
 
 test_that("It's a dataframe with correct SSRs",{
   expect_equal(is.data.frame(a),TRUE) # just an arbitrary element

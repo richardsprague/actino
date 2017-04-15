@@ -3,7 +3,7 @@
 
 #' microbiome data available to ub.phyloseq
 #'
-#' sample CSV file showing one kombucha sample
+#' sample data frame showing one kombucha sample
 #'
 #' @docType data
 #'
@@ -14,14 +14,29 @@
 "kombucha.csv"
 
 
+
 #' microbiome data available to ub.phyloseq
 #'
-#' Series of 19 samples during a kombucha experiment
+#' Series of 19 samples during a kombucha experiment (genus level only)
 #'
 #' @docType data
 #'
-#' @usage data(kombucha)
+#' @usage data(kombucha.genus)
 #'
 #' @keywords microbiome
 #'
-"kombucha"
+"kombucha.genus"
+
+
+#' microbiome data available to ub.phyloseq
+#'
+#' Series of 19 samples during a kombucha experiment (all ranks)
+#'
+#' @docType data
+#'
+#' @usage data(kombucha.all_ranks)
+#'
+#' @keywords microbiome
+#'
+"kombucha.all_ranks"
+

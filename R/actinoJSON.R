@@ -218,6 +218,7 @@ join_all_ubiome_files_full <- function(flist,count.normalized=FALSE,site="gut"){
 #' @param rank taxonomical rank (generally "genus" or "family" or "species")
 #' @return valid Phyloseq object
 #' @importFrom readxl read_excel
+#' @importFrom phyloseq taxa_names sample_names build_tax_table parse_taxonomy_default tax_table
 #' @export
 phyloseq_from_JSON_at_rank <- function(flist, mapfile, rank="genus") {
   # return a valid Phyloseq object created from the JSON files in flist and an Excel formatted mapfile
@@ -235,7 +236,10 @@ phyloseq_from_JSON_at_rank <- function(flist, mapfile, rank="genus") {
   map <- read_excel(mapfile)
   map.data <-
     map[match(ssrs, map$SSR), which(colnames(map) %in% MAPFILE_ATTRIBUTES)]
-  row.names(map.data) <- map.data$SSR # todo: maybe delete this line?  not necessary to set rownames?
+
+  map.data.ps <- phyloseq::sample_data(map.data)
+  phyloseq::sample_names(map.data.ps) <- map.data$SSR
+  #row.names(map.data) <- map.data$SSR # todo: maybe delete this line?  not necessary to set rownames?
   f.taxtable <-
     phyloseq::build_tax_table(lapply(f.all$tax_name, phyloseq::parse_taxonomy_default))
   colnames(f.taxtable) <- c(Hmisc::upFirst(rank))
@@ -246,7 +250,7 @@ phyloseq_from_JSON_at_rank <- function(flist, mapfile, rank="genus") {
 
   return(phyloseq::phyloseq(
     phyloseq::otu_table(f.biome, taxa_are_rows = TRUE),
-    phyloseq::sample_data(map.data),
+    map.data.ps, #phyloseq::sample_data(map.data),
     phyloseq::tax_table(f.taxtable)
   ))
 
@@ -257,6 +261,7 @@ phyloseq_from_JSON_at_rank <- function(flist, mapfile, rank="genus") {
 #' @param flist character vector of file names
 #' @param mapfile XLSX filename that contains mapping info for the same SSRS in flist
 #' @return valid Phyloseq object
+#' @importFrom phyloseq sample_names taxa_names build_tax_table parse_taxonomy_qiime tax_table otu_table sample_data
 #' @importFrom readxl read_excel
 #' @export
 phyloseq_from_JSON <- function(flist, mapfile) {
@@ -275,19 +280,22 @@ phyloseq_from_JSON <- function(flist, mapfile) {
   map.data <-
     map[match(ssrs, map$SSR), which(colnames(map) %in% MAPFILE_ATTRIBUTES)]
 
-  row.names(map.data) <- map.data$SSR # todo: maybe delete this line?  not necessary to set rownames?
+  map.data.ps <- phyloseq::sample_data(map.data)
+  phyloseq::sample_names(map.data.ps) <- map.data$SSR
+
+  #row.names(map.data) <- map.data$SSR # todo: maybe delete this line?  not necessary to set rownames?
   f.taxtable <-
     phyloseq::build_tax_table(lapply(f.all$tax_name, phyloseq::parse_taxonomy_qiime))
 
   #dimnames(f.taxtable)[[1]] <- f.all$tax_name
-  taxa_names(f.taxtable) <- f.all$tax_name
+  phyloseq::taxa_names(f.taxtable) <- f.all$tax_name
   f.biome <- as.matrix(f.all[,-1])
   colnames(f.biome) <- ssrs
   rownames(f.biome) <- f.all$tax_name
 
   return(phyloseq::phyloseq(
     phyloseq::otu_table(f.biome, taxa_are_rows = TRUE),
-    phyloseq::sample_data(map.data),
+    map.data.ps, # phyloseq::sample_data(map.data),
     phyloseq::tax_table(f.taxtable)
   ))
 }

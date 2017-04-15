@@ -32,12 +32,12 @@ mapfile <- data.frame(ssr = c(0), Username = c("testPerson"))
 
 p <- experiment_to_phyloseq(kombucha.csv,mapfile)
 
-kombucha <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
+kombucha.genus <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
 
-kombucha.o <- phyloseq_from_JSON(just_json_files_in(DATA_DIR)[1:3],paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
+kombucha.all_ranks <- phyloseq_from_JSON(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
 
 
-devtools::use_data(kombucha, overwrite = TRUE)
+devtools::use_data(kombucha.genus,kombucha.all_ranks,kombucha.csv, overwrite = TRUE)
 
 # this line is useful for interactive testing:
 

@@ -7,8 +7,8 @@ context("Prove it's a proper phyloseq object")
 
 DATA_DIR <- system.file("extdata", package = "actino") # "../../inst/extdata"
 
-data("kombucha")
-p <- kombucha
+data("kombucha.genus")
+p <- kombucha.genus
 pj <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
 
 test_that(paste("Current directory=",getwd()),{
@@ -62,7 +62,7 @@ test_that("create full Phyloseq object from a directory of json files",{
 
 test_that("correct metadata is loaded into phyloseq object",{
   #pj <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
-  expect_equal(as.character(sample_data(kombucha)[9,5]),"pizza")
+  expect_equal(as.character(sample_data(kombucha.genus)[9,5]),"pizza")
 })
 
 test_that("tax_abbrev returns correct shortened abbrev for a tax_rank",{
