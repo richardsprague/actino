@@ -6,9 +6,9 @@
 library(dplyr)
 library(tidyr)
 library(phyloseq)
-library(readxl)
+#library(readxl)
 #library(actino)
-library(jsonlite)
+#library(jsonlite)
 library(testthat)
 
 # if you want to hand-assemble the functions from the package:

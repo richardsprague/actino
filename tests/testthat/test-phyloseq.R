@@ -9,7 +9,17 @@ DATA_DIR <- system.file("extdata", package = "actino") # "../../inst/extdata"
 
 data("kombucha.genus")
 p <- kombucha.genus
-pj <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
+# save some time during testing by using the following pre-loaded data
+#pj <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
+#save(pj,file=paste0(DATA_DIR,"/pj.RData"))
+load(paste0(DATA_DIR,"/pj.RData"))
+
+d <- paste0(DATA_DIR,"/dummyData/2017-01-10-dummy-755190.json")
+d.p <- phyloseq_from_JSON_at_rank(d, paste0(DATA_DIR,"/dummyData/Dummy_User_Mapfile.xlsx"))
+
+test_that("dummy data works",{
+  expect_equal(ntaxa(d.p),80)
+})
 
 test_that(paste("Current directory=",getwd()),{
   #print("running phyloseq tests now")

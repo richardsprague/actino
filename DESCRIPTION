@@ -1,7 +1,7 @@
 Package: actino
 Type: Package
 Title: Phyloseq utilities for personal microbiome
-Version: 0.1.9
+Version: 0.1.10
 Author: Richard Sprague
 Authors@R: person("Richard", "Sprague", email = "sprague@ubiome.com",
   role = c("aut", "cre"))
