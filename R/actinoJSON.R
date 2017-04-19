@@ -137,6 +137,7 @@ join_all_ubiome_files <- function(flist,tax_rank="genus",count.normalized=FALSE)
 #' @param fname file name as character vector
 #' @param count.normalized use the count_norm field instead of raw read numbers (default is FALSE)
 #' @importFrom dplyr filter
+#' @importFrom jsonlite fromJSON
 #' @return data frame representation of the sample
 read_ubiome_json_full<-function(fname,count.normalized=FALSE){
 
@@ -146,7 +147,7 @@ read_ubiome_json_full<-function(fname,count.normalized=FALSE){
   name_for_sample <- function(dateVal,notesVal,ssr){
     paste(as.character(as.Date(dateVal)),"$",ssr,"$",substring(notesVal,6,10))
   }
-  j<-fromJSON(fname)
+  j<-jsonlite::fromJSON(fname)
 
   rj<-j[["ubiome_bacteriacounts"]]
   #p<-apply(rj,1,function (x) full_taxa(rj,as.data.frame(t(x))))
@@ -168,6 +169,7 @@ read_ubiome_json_full<-function(fname,count.normalized=FALSE){
 #' @param rank tax_rank as character vector
 #' @param count.normalized use the count_norm field instead of raw read numbers (default is FALSE)
 #' @importFrom dplyr filter
+#' @importFrom jsonlite fromJSON
 #' @return data frame representation of the sample
 #returns a dataframe of just the genus and the count (or count_norm if count.normalized is TRUE)
 read_ubiome_json<-function(fname,rank="genus",count.normalized=FALSE){
@@ -177,7 +179,7 @@ read_ubiome_json<-function(fname,rank="genus",count.normalized=FALSE){
   name_for_sample <- function(dateVal,notesVal,ssr){
     paste(as.character(as.Date(dateVal)),"$",ssr,"$",substring(notesVal,6,10))
   }
-  j<-fromJSON(fname)
+  j<-jsonlite::fromJSON(fname)
 
 
   rj<-filter(j[["ubiome_bacteriacounts"]],tax_rank == rank)
@@ -233,12 +235,16 @@ phyloseq_from_JSON_at_rank <- function(flist, mapfile, rank="genus") {
   ssrs<-sapply(strsplit(names(f.all)[c(-1,-2)],"\\$"),function(x) as.numeric(x[2]))
 
   #names(f.mat)[2:(length(f.mat)-1)] <- ssrs
-  map <- read_excel(mapfile)
+  map <- readxl::read_excel(mapfile)
   map.data <-
     map[match(ssrs, map$SSR), which(colnames(map) %in% MAPFILE_ATTRIBUTES)]
 
   map.data.ps <- phyloseq::sample_data(map.data)
   phyloseq::sample_names(map.data.ps) <- map.data$SSR
+  # phyloseq::sample_data(map.data.ps)$Date <- sapply(lapply(sample_data(map.data.ps)[['Date']],
+  #                                                           as.Date,
+  #                                                           origin = "1899-12-30"), # not sure why this origin gives correct answers
+  #                                                    as.character)
   #row.names(map.data) <- map.data$SSR # todo: maybe delete this line?  not necessary to set rownames?
   f.taxtable <-
     phyloseq::build_tax_table(lapply(f.all$tax_name, phyloseq::parse_taxonomy_default))
@@ -276,7 +282,7 @@ phyloseq_from_JSON <- function(flist, mapfile) {
   f.mat <- f.all[, -1] %>% matrix()
   ssrs<-sapply(strsplit(names(f.all)[-1],"\\$"),function(x) as.numeric(x[2]))
 
-  map <- read_excel(mapfile)
+  map <- readxl::read_excel(mapfile)
   map.data <-
     map[match(ssrs, map$SSR), which(colnames(map) %in% MAPFILE_ATTRIBUTES)]
 

@@ -37,6 +37,11 @@ kombucha.genus <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0
 kombucha.all_ranks <- phyloseq_from_JSON(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
 
 
+
+
+
+#####
+
 devtools::use_data(kombucha.genus,kombucha.all_ranks,kombucha.csv, overwrite = TRUE)
 
 # this line is useful for interactive testing:

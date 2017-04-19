@@ -10,21 +10,30 @@ DATA_DIR <- system.file("extdata", package = "actino") # "../../inst/extdata"
 data("kombucha.genus")
 p <- kombucha.genus
 # save some time during testing by using the following pre-loaded data
-#pj <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
+pj <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
 #save(pj,file=paste0(DATA_DIR,"/pj.RData"))
-load(paste0(DATA_DIR,"/pj.RData"))
+#load(paste0(DATA_DIR,"/pj.RData"))
 
 d <- paste0(DATA_DIR,"/dummyData/2017-01-10-dummy-755190.json")
-d.p <- phyloseq_from_JSON_at_rank(d, paste0(DATA_DIR,"/dummyData/Dummy_User_Mapfile.xlsx"))
+d.j <- jsonlite::fromJSON(d)[["ubiome_bacteriacounts"]]
+d.p <- phyloseq_from_JSON(d, paste0(DATA_DIR,"/dummyData/Dummy_User_Mapfile.xlsx"))
 
 test_that("dummy data works",{
-  expect_equal(ntaxa(d.p),80)
+  expect_equal(ntaxa(d.p),12)
+  expect_equal(as.character(tax_table(d.p)[4,"Genus"]), "Bifidobacterium")
+  expect_equal(as.numeric(otu_table(d.p)["Root",1]),75924) # total counts in dummmy file
+
 })
 
 test_that(paste("Current directory=",getwd()),{
   #print("running phyloseq tests now")
   #print(getwd())
   #expect_equal(TRUE,FALSE)
+})
+
+test_that("phyloseq_from_JSON_at_rank generates a correct date value",{
+  expect_equal(as.character(sample_data(pj)$Date[2]),"2016-07-27")
+  expect_equal(class(sample_data(pj)$Date),c("POSIXct","POSIXt"))
 })
 
 
@@ -65,8 +74,10 @@ test_that("create full Phyloseq object from a directory of json files",{
   pj <- phyloseq_from_JSON(jsonFileList,paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
   expect_equal(get_taxa_unique(pj,taxonomic.rank = "Rank1"),"Root")
   firmicutes <- subset_taxa(pj, Phylum=="Firmicutes")
+  blautia <- subset_taxa(firmicutes, Genus == "Blautia")
+  expect_equal(as.numeric(otu_table(blautia)[2,2]),5522)
   expect_equal(length(otu_table(firmicutes)[,2]),109)
-  expect_equal(as.numeric(otu_table(firmicutes)[1,2]),4300) # abundance of Roseburia in first sample
+  expect_equal(as.numeric(otu_table(firmicutes)[1,2]),4300) # abundance of Roseburia in 2nd sample (ssr=73837)
 
 })
 
