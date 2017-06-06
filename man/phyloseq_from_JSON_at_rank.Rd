@@ -4,7 +4,8 @@
 \alias{phyloseq_from_JSON_at_rank}
 \title{return a valid Phyloseq object created from the JSON files in flist and an Excel formatted mapfile}
 \usage{
-phyloseq_from_JSON_at_rank(flist, mapfile, rank = "genus")
+phyloseq_from_JSON_at_rank(flist, mapfile, rank = "genus",
+  count.normalized = FALSE)
 }
 \arguments{
 \item{flist}{character vector of file names}
@@ -12,6 +13,8 @@ phyloseq_from_JSON_at_rank(flist, mapfile, rank = "genus")
 \item{mapfile}{XLSX filename that contains mapping info for the same SSRS in flist}
 
 \item{rank}{taxonomical rank (generally "genus" or "family" or "species")}
+
+\item{count.normalized}{use the count_norm field instead of raw read numbers (default is FALSE)}
 }
 \value{
 valid Phyloseq object

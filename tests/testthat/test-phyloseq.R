@@ -10,18 +10,20 @@ DATA_DIR <- system.file("extdata", package = "actino") # "../../inst/extdata"
 data("kombucha.genus")
 p <- kombucha.genus
 # save some time during testing by using the following pre-loaded data
-pj <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
+#pj <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
 #save(pj,file=paste0(DATA_DIR,"/pj.RData"))
-#load(paste0(DATA_DIR,"/pj.RData"))
+load(paste0(DATA_DIR,"/pj.RData"))
 
 d <- paste0(DATA_DIR,"/dummyData/2017-01-10-dummy-755190.json")
 d.j <- jsonlite::fromJSON(d)[["ubiome_bacteriacounts"]]
 d.p <- phyloseq_from_JSON(d, paste0(DATA_DIR,"/dummyData/Dummy_User_Mapfile.xlsx"))
+d.p.n <-phyloseq_from_JSON(d, paste0(DATA_DIR,"/dummyData/Dummy_User_Mapfile.xlsx"), count.normalized = TRUE)
 
 test_that("dummy data works",{
   expect_equal(ntaxa(d.p),12)
   expect_equal(as.character(tax_table(d.p)[4,"Genus"]), "Bifidobacterium")
   expect_equal(as.numeric(otu_table(d.p)["Root",1]),75924) # total counts in dummmy file
+  expect_equal(as.numeric(otu_table(d.p.n)["Root",1]),1028432)
 
 })
 
@@ -65,6 +67,16 @@ test_that("create Phyloseq object from a directory of json files",{
   pj <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR),paste0(DATA_DIR,"/kombucha-mapfile.xlsx"))
   expect_equal(nsamples(pj),nsamples(p))
   expect_equivalent(p,pj)
+  expect_equal(as.numeric(otu_table(pj)[10,3]),2786) # just an arbitrary element
+
+})
+
+test_that("create Phyloseq object with normalized counts",{
+  pj.norm <- phyloseq_from_JSON_at_rank(just_json_files_in(DATA_DIR)[1:3],paste0(DATA_DIR,"/kombucha-mapfile.xlsx"),
+                                        count.normalized = TRUE)
+  expect_equal(nsamples(pj.norm),3)
+  expect_equal(rownames(tax_table(pj.norm))[1:3], c("Flavobacterium","Kluyvera","Bacteroides"))
+  expect_equal(as.numeric(otu_table(pj.norm)[10,3]),43927) # just an arbitrary element to see if it works
 
 })
 

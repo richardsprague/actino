@@ -218,18 +218,19 @@ join_all_ubiome_files_full <- function(flist,count.normalized=FALSE,site="gut"){
 #' @param flist character vector of file names
 #' @param mapfile XLSX filename that contains mapping info for the same SSRS in flist
 #' @param rank taxonomical rank (generally "genus" or "family" or "species")
+#' @param count.normalized use the count_norm field instead of raw read numbers (default is FALSE)
 #' @return valid Phyloseq object
 #' @importFrom readxl read_excel
 #' @importFrom phyloseq taxa_names sample_names build_tax_table parse_taxonomy_default tax_table
 #' @export
-phyloseq_from_JSON_at_rank <- function(flist, mapfile, rank="genus") {
+phyloseq_from_JSON_at_rank <- function(flist, mapfile, rank="genus", count.normalized = FALSE) {
   # return a valid Phyloseq object created from the JSON files in flist and an Excel formatted mapfile
   # Args:
   #   flist: character vector of file names.
   #   mapfile: XLSX filename that contains mapping info for the same SSRS in flist
   # Returns:  valid Phyloseq object
 
-  f.all <- join_all_ubiome_files(flist,tax_rank = rank)
+  f.all <- join_all_ubiome_files(flist,tax_rank = rank, count.normalized)
   f.all[is.na(f.all)] <- 0
   f.mat <- f.all[, c(-1,-2)] %>% matrix()
   ssrs<-sapply(strsplit(names(f.all)[c(-1,-2)],"\\$"),function(x) as.numeric(x[2]))
@@ -265,19 +266,20 @@ phyloseq_from_JSON_at_rank <- function(flist, mapfile, rank="genus") {
 #' @title Make Phyloseq object from JSON files
 #' @description  return a valid Phyloseq object created from the JSON files in flist and an Excel formatted mapfile
 #' @param flist character vector of file names
+#' @param count.normalized use the count_norm field instead of raw read numbers (default is FALSE)
 #' @param mapfile XLSX filename that contains mapping info for the same SSRS in flist
 #' @return valid Phyloseq object
 #' @importFrom phyloseq sample_names taxa_names build_tax_table parse_taxonomy_qiime tax_table otu_table sample_data
 #' @importFrom readxl read_excel
 #' @export
-phyloseq_from_JSON <- function(flist, mapfile) {
+phyloseq_from_JSON <- function(flist, mapfile, count.normalized = FALSE) {
   # return a valid Phyloseq object created from the JSON files in flist and an Excel formatted mapfile
   # Args:
   #   flist: character vector of file names.
   #   mapfile: XLSX filename that contains mapping info for the same SSRS in flist
   # Returns:  valid Phyloseq object
 
-  f.all <- join_all_ubiome_files_full(flist)
+  f.all <- join_all_ubiome_files_full(flist, count.normalized)
   f.all[is.na(f.all)] <- 0
   f.mat <- f.all[, -1] %>% matrix()
   ssrs<-sapply(strsplit(names(f.all)[-1],"\\$"),function(x) as.numeric(x[2]))
