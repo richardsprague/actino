@@ -26,19 +26,8 @@ If this is your first time to use Phyloseq, you will need to load a few prerequi
 
 </div>
 
-Once these are installed, you’ll need the `actino` package, which will be given to you as a tar file with a name like `actino_0.1.1.tar.gz`. You can download it directly from this directory too.
+Once these are installed, you’ll need the `actino` package, which you can download from this repo using the devtools package:
 
-From R, you can install it: 
-
-<div markdown="1" style="-webkit-print-color-adjust: exact; color: rgb(0, 0, 0); font-family: Georgia, Times, sans-serif; font-size: 14px; font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">
-    
-    
-    install.packages("actino_0.1.0.tar.gz", repos = NULL, type = "source")
-
-</div>
-
-# Using Devtools
-If you have the devtools package, installation is much easier. 
 <div markdown="1" style="-webkit-print-color-adjust: exact; color: rgb(0, 0, 0); font-family: Georgia, Times, sans-serif; font-size: 14px; font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">
     
     library(devtools)
