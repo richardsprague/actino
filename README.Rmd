@@ -48,21 +48,12 @@ Actino includes a few built-in phyloseq objects, including ```kombucha.genus```.
   
 </div>
 
-To load a new phyloseq object from a JSON file you will need a mapfile, which is an Excel file containing a row for each sample, and several columns including "SSR", "Date", "Label" and more.
+```{r}
+library("actino")
+library(phyloseq)
+plot_bar(prune_taxa(taxa_sums(kombucha.genus)>100000,kombucha.genus), fill = "Genus")
+```
 
-<div markdown="1" style="-webkit-print-color-adjust: exact; color: rgb(0, 0, 0); font-family: Georgia, Times, sans-serif; font-size: 14px; font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">
-
-    > experiment_to_phyloseq("myCSVfile.csv",mapfile)
-
-</div>
-
-<div markdown="1" style="-webkit-print-color-adjust: exact; color: rgb(0, 0, 0); font-family: Georgia, Times, sans-serif; font-size: 14px; font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">
-
-    > library("actino")
-    > kombucha.csv #  a pre-loaded CSV 
-    > plot_bar(prune_taxa(taxa_sums(kombucha.genus)>100000,kombucha.genus), fill = "Genus")
-
-</div>
 
 To load a new phyloseq object from a JSON file you will need a mapfile, which is an Excel file containing a row for each sample, and several columns including "SSR", "Date", "Label" and more.
 
@@ -71,8 +62,51 @@ To load a new phyloseq object from a JSON file you will need a mapfile, which is
     > experiment_to_phyloseq("myCSVfile.csv",mapfile)
 
 </div>
+
 
 This will generate a valid phyloseq object.
+
+## Load some data
+The package includes some sample data, which you can load like this:
+
+```{r loadData}
+library(actino)
+data("kombucha.csv")
+head(kombucha.csv)
+```
+
+The data, loaded into the variable ```kombucha.csv``` is a dataframe created from a CSV file with three columns: ```tax_name```, ```ssr```, and ```count```. It represents the SSRs associated with a week-long experiment of a user (me!) who drank several liters of kombucha each day to see the effect on his microbiome.
+
+This is the raw data. To be useful for Phyloseq, it needs an accompanying file, called a mapfile, that maps attributes to each sample. The mapfile is a dataframe where the columns correspond to attributes of the data. You can have as many columns as you like, but one of the columns (usually the first one) must stand for the name of the sample. In most uBiome situations, the samples will be referred to by their SSR, and the ```actino``` package will expect a column named ```ssr``` in its mapfile.  (Note: lowercase)
+
+Let's create a very simple mapfile for ```kombucha.csv```:
+
+```{r}
+kombucha <- kombucha.csv  # simplify the name to make it easier to type
+
+ssrs <- unique(kombucha$ssr)
+
+ssrs
+```
+
+As you can see, we have a total of 15 unique SSRs, corresponding to 15 unique samples.
+Let's construct a very simple map file.
+
+The first column represents the sample name (aka SSR).  We'll add a second column that represents the date of the sample. Finally, let's add a third column ```color``` that we’ll pretend is associated with some feature of the samples.  Color of the stool? Color of the kombucha drink that day?  Okay, if you don’t like my example features, so go ahead and add some other columns if you like.
+
+```{r}
+mapfile<-data.frame(ssr=ssrs,date = Sys.Date()+seq(1,length(ssrs)), color = colors()[1:length(ssrs)])
+
+mapfile
+```
+
+Although this example is a bit contrived, the result for Phyloseq is an entirely valid mapfile. Alternatively you could have made the map file manually too; Remember that in R it’s easy to create any dataframe from a CSV or Excel file. If you create one by hand, simply read it into R using the ```read.csv``` command.  Although in this demo, we are loading some pre-existing data, you could just as easily have loaded straight from the CSV file of your choice like this:
+
+```
+kombucha <- read.csv("myKombuchaDataFile.csv")
+mapfile <- read.csv("myKombuchaMapFile.csv")
+```
+
 
 # References and useful ways to get started
 
