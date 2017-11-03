@@ -2,7 +2,7 @@
 title: "README"
 author: "Richard Sprague"
 date: "10/30/2017"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -48,7 +48,7 @@ Actino includes a few built-in phyloseq objects, including ```kombucha.genus```.
   
 </div>
 
-```{r}
+```{r plotKombucha}
 library("actino")
 library(phyloseq)
 plot_bar(prune_taxa(taxa_sums(kombucha.genus)>100000,kombucha.genus), fill = "Genus")
