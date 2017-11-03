@@ -39,6 +39,7 @@ Once these are installed, you’ll need the `actino` package, which you can down
 
 Actino includes a few built-in phyloseq objects, including ```kombucha.genus```. The following commands will plot the abundances:
 
+
 <div markdown="1" style="-webkit-print-color-adjust: exact; color: rgb(0, 0, 0); font-family: Georgia, Times, sans-serif; font-size: 14px; font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">
 
     > library("actino")
@@ -51,7 +52,23 @@ To load a new phyloseq object from a JSON file you will need a mapfile, which is
 
 <div markdown="1" style="-webkit-print-color-adjust: exact; color: rgb(0, 0, 0); font-family: Georgia, Times, sans-serif; font-size: 14px; font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">
 
-  experiment_to_phyloseq("myCSVfile.csv",mapfile)
+    > experiment_to_phyloseq("myCSVfile.csv",mapfile)
+
+</div>
+
+<div markdown="1" style="-webkit-print-color-adjust: exact; color: rgb(0, 0, 0); font-family: Georgia, Times, sans-serif; font-size: 14px; font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">
+
+    > library("actino")
+    > kombucha.csv #  a pre-loaded CSV 
+    > plot_bar(prune_taxa(taxa_sums(kombucha.genus)>100000,kombucha.genus), fill = "Genus")
+
+</div>
+
+To load a new phyloseq object from a JSON file you will need a mapfile, which is an Excel file containing a row for each sample, and several columns including "SSR", "Date", "Label" and more.
+
+<div markdown="1" style="-webkit-print-color-adjust: exact; color: rgb(0, 0, 0); font-family: Georgia, Times, sans-serif; font-size: 14px; font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">
+
+    > experiment_to_phyloseq("myCSVfile.csv",mapfile)
 
 </div>
 
