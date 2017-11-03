@@ -23,4 +23,3 @@ Make a valid Phyloseq object out of a uBiome dataframe and a map file
 simple.df <- data.frame(tax_name=c("taxa1"),"1234"=c(2352))
 simple.map <- data.frame(ssr=c(1234))
 }
-

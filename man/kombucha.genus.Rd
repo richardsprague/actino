@@ -12,4 +12,3 @@ data(kombucha.genus)
 Series of 19 samples during a kombucha experiment (genus level only)
 }
 \keyword{microbiome}
-

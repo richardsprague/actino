@@ -14,4 +14,3 @@ dataframe_at_rank(df, rank = "genus")
 \description{
 turn a uBIome data frame into a matrix at a specific rank
 }
-

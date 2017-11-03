@@ -1,7 +1,7 @@
 ---
 title: "README"
 author: "Richard Sprague"
-date: "1/30/2017"
+date: "10/30/2017"
 output: html_document
 ---
 
@@ -35,6 +35,19 @@ Once these are installed, you’ll need the `actino` package, which you can down
     
 </div>
 
+# Quick Start
+
+Actino includes a few built-in phyloseq objects, including ```kombucha.genus```. The following commands will plot the abundances:
+
+  > library("actino")
+  > kombucha.csv #  a pre-loaded CSV 
+  > plot_bar(prune_taxa(taxa_sums(kombucha.genus)>100000,kombucha.genus), fill = "Genus")
+
+To load a new phyloseq object from a JSON file you will need a mapfile, which is an Excel file containing a row for each sample, and several columns including "SSR", "Date", "Label" and more.
+
+  > experiment_to_phyloseq("myCSVfile.csv",mapfile)
+  
+This will generate a valid phyloseq object.
 
 # References and useful ways to get started
 

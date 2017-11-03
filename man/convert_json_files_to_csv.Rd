@@ -14,4 +14,3 @@ convert_json_files_to_csv(pattern = "[[:alnum:]].json", directory = getwd())
 \description{
 Convenient way to automatically convert all JSON files in a directory to CSV.
 }
-

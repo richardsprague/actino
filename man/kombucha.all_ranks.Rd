@@ -12,4 +12,3 @@ data(kombucha.all_ranks)
 Series of 19 samples during a kombucha experiment (all ranks)
 }
 \keyword{microbiome}
-
