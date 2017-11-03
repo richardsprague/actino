@@ -12,4 +12,3 @@ data(kombucha.csv)
 sample data frame showing one kombucha sample
 }
 \keyword{microbiome}
-

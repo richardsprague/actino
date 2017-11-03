@@ -12,4 +12,3 @@ tax_rank_of_full_taxa(parse_taxon)
 \description{
 opposite function for full_taxa(). Return a list [tax_name, tax_rank]
 }
-

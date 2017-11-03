@@ -19,4 +19,3 @@ data frame where first col is all taxa names, other cols are samples
 \description{
 returns a big dataframe joining all tax_names from a list of JSON files
 }
-

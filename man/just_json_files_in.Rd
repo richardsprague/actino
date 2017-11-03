@@ -12,4 +12,3 @@ just_json_files_in(d)
 \description{
 returns a vector of just the json files in a directory d
 }
-

@@ -12,4 +12,3 @@ samples_as_column_dataframe(DF)
 \description{
 Convenience function to make a dataframe where sample names are in columns, not rows
 }
-

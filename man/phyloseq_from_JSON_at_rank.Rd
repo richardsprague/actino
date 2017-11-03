@@ -22,4 +22,3 @@ valid Phyloseq object
 \description{
 return a valid Phyloseq object created from the JSON files in flist and an Excel formatted mapfile
 }
-

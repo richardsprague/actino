@@ -14,4 +14,3 @@ tax_abbrev(tax_rank, inverse = FALSE)
 \description{
 Needed by functions that convert tax_names to QIIME (or other) format.
 }
-

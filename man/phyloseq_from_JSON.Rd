@@ -4,12 +4,14 @@
 \alias{phyloseq_from_JSON}
 \title{Make Phyloseq object from JSON files}
 \usage{
-phyloseq_from_JSON(flist, mapfile)
+phyloseq_from_JSON(flist, mapfile, count.normalized = FALSE)
 }
 \arguments{
 \item{flist}{character vector of file names}
 
 \item{mapfile}{XLSX filename that contains mapping info for the same SSRS in flist}
+
+\item{count.normalized}{use the count_norm field instead of raw read numbers (default is FALSE)}
 }
 \value{
 valid Phyloseq object
@@ -17,4 +19,3 @@ valid Phyloseq object
 \description{
 return a valid Phyloseq object created from the JSON files in flist and an Excel formatted mapfile
 }
-

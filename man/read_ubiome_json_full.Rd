@@ -17,4 +17,3 @@ data frame representation of the sample
 \description{
 Reads JSON into a dataframe.
 }
-
