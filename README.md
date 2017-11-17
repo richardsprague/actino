@@ -39,11 +39,18 @@ plot_bar(prune_taxa(taxa_sums(kombucha.genus)>100000,kombucha.genus), fill = "Ge
 
 ![](README_files/figure-markdown_github-ascii_identifiers/plotKombucha-1.png)
 
-To load a new phyloseq object from a JSON file you will need a mapfile, which is an Excel file containing a row for each sample, and several columns including "SSR", "Date", "Label" and more.
+To load a new phyloseq object, you have choices: from a CSV file or from JSON.  In both cases, you'll need a mapfile, which is an Excel file containing a row for each sample, and several columns including "SSR", "Date", "Label" and more.
+ 
+ From a CSV file:
 
     > experiment_to_phyloseq("myCSVfile.csv",mapfile)
 
-This will generate a valid phyloseq object.
+
+from a JSON file:
+
+	> phyloseq_from_JSON_at_rank("myJSONfile.json",mapfile,rank="genus")
+
+Either of these functions will generate a valid phyloseq object.
 
 Load some data
 --------------
