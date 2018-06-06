@@ -1,7 +1,7 @@
 ---
 title: "README"
 author: "Richard Sprague"
-date: "10/30/2017"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output: github_document
 ---
 
@@ -17,36 +17,26 @@ This package helps you read and manipulate microbiome files in the open source p
 
 If this is your first time to use Phyloseq, you will need to load a few prerequisites: 
 
-<div markdown="1" style="-webkit-print-color-adjust: exact; color: rgb(0, 0, 0); font-family: Georgia, Times, sans-serif; font-size: 14px; font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">
-    
-    
     > install.packages(c(""ggplot2","dplyr", "tidyr", "readxl"))
-    > source("<https://bioconductor.org/biocLite.R>")
+    > source("https://bioconductor.org/biocLite.R")
     > biocLite("phyloseq")
-
-</div>
 
 Once these are installed, you’ll need the `actino` package, which you can download from this repo using the devtools package:
 
-<div markdown="1" style="-webkit-print-color-adjust: exact; color: rgb(0, 0, 0); font-family: Georgia, Times, sans-serif; font-size: 14px; font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">
-    
+ 
     > library(devtools)
     > install_github("richardsprague/actino")
     
-</div>
+
 
 # Quick Start
 
 Actino includes a few built-in phyloseq objects, including ```kombucha.genus```. The following commands will plot the abundances:
 
 
-<div markdown="1" style="-webkit-print-color-adjust: exact; color: rgb(0, 0, 0); font-family: Georgia, Times, sans-serif; font-size: 14px; font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">
-
     > library("actino")
     > kombucha.csv #  a pre-loaded CSV 
     > plot_bar(prune_taxa(taxa_sums(kombucha.genus)>100000,kombucha.genus), fill = "Genus")
-  
-</div>
 
 ```{r plotKombucha}
 library("actino")
@@ -55,13 +45,26 @@ plot_bar(prune_taxa(taxa_sums(kombucha.genus)>100000,kombucha.genus), fill = "Ge
 ```
 
 
-To load a new phyloseq object from a JSON file you will need a mapfile, which is an Excel file containing a row for each sample, and several columns including "SSR", "Date", "Label" and more.
+To load a new phyloseq object from a JSON file you will need a mapfile, which is an Excel file containing a row for each sample, and several columns including "SSR", "Date", "Label" and more.  (Figure \@ref(mapfile))
 
-<div markdown="1" style="-webkit-print-color-adjust: exact; color: rgb(0, 0, 0); font-family: Georgia, Times, sans-serif; font-size: 14px; font-style: normal; font-variant-caps: normal; font-weight: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">
+```{r mapfile, echo = FALSE, include = TRUE}
+
+mapfile <- data.frame( Username = rep("Richard Sprague",5), SSR = as.integer(runif(5)*100000),
+                       Label = paste("Label",seq(1,5)),
+                       Date = seq(from=as.Date("2018-01-01"), by = 1, length.out = 5))
+
+knitr::kable(mapfile, caption = "A typical mapfile")
+
+
+```
+
+If your data is in a CSV file, you'll need it in a form with the following columns
+
+```{r mapfileCSV, echo = TRUE, include = FALSE}
+
+```
 
     > experiment_to_phyloseq("myCSVfile.csv",mapfile)
-
-</div>
 
 
 This will generate a valid phyloseq object.

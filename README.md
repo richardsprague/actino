@@ -1,7 +1,7 @@
 README
 ================
 Richard Sprague
-10/30/2017
+June 06, 2018
 
 Getting Started
 ---------------
@@ -14,7 +14,7 @@ Prerequisites
 If this is your first time to use Phyloseq, you will need to load a few prerequisites:
 
     > install.packages(c(""ggplot2","dplyr", "tidyr", "readxl"))
-    > source("<https://bioconductor.org/biocLite.R>")
+    > source("https://bioconductor.org/biocLite.R")
     > biocLite("phyloseq")
 
 Once these are installed, you’ll need the `actino` package, which you can download from this repo using the devtools package:
@@ -37,20 +37,23 @@ library(phyloseq)
 plot_bar(prune_taxa(taxa_sums(kombucha.genus)>100000,kombucha.genus), fill = "Genus")
 ```
 
-![](README_files/figure-markdown_github-ascii_identifiers/plotKombucha-1.png)
+![](README_files/figure-markdown_github/plotKombucha-1.png)
 
-To load a new phyloseq object, you have choices: from a CSV file or from JSON.  In both cases, you'll need a mapfile, which is an Excel file containing a row for each sample, and several columns including "SSR", "Date", "Label" and more.
- 
- From a CSV file:
+To load a new phyloseq object from a JSON file you will need a mapfile, which is an Excel file containing a row for each sample, and several columns including "SSR", "Date", "Label" and more. (Figure @ref(mapfile))
+
+| Username        |    SSR| Label   | Date       |
+|:----------------|------:|:--------|:-----------|
+| Richard Sprague |   7423| Label 1 | 2018-01-01 |
+| Richard Sprague |  55309| Label 2 | 2018-01-02 |
+| Richard Sprague |   9742| Label 3 | 2018-01-03 |
+| Richard Sprague |  55669| Label 4 | 2018-01-04 |
+| Richard Sprague |  78762| Label 5 | 2018-01-05 |
+
+If your data is in a CSV file, you'll need it in a form with the following columns
 
     > experiment_to_phyloseq("myCSVfile.csv",mapfile)
 
-
-from a JSON file:
-
-	> phyloseq_from_JSON_at_rank("myJSONfile.json",mapfile,rank="genus")
-
-Either of these functions will generate a valid phyloseq object.
+This will generate a valid phyloseq object.
 
 Load some data
 --------------
@@ -98,7 +101,7 @@ mapfile
 ```
 
     ##   ssr       date color
-    ## 1   0 2017-11-03 white
+    ## 1   0 2018-06-07 white
 
 Although this example is a bit contrived, the result for Phyloseq is an entirely valid mapfile. Alternatively you could have made the map file manually too; Remember that in R it’s easy to create any dataframe from a CSV or Excel file. If you create one by hand, simply read it into R using the `read.csv` command. Although in this demo, we are loading some pre-existing data, you could just as easily have loaded straight from the CSV file of your choice like this:
 
