@@ -3,6 +3,7 @@
 export(convert_json_files_to_csv)
 export(dataframe_at_rank)
 export(experiment_to_phyloseq)
+export(full_taxa)
 export(join_all_ubiome_files)
 export(join_all_ubiome_files_full)
 export(just_json_files_in)

@@ -35,9 +35,14 @@ tax_abbrev<-function(tax_rank, inverse=FALSE){
           as.character(tax[tax$taxes==tax_rank,2]))
 }
 
+#' @title given a row taxaRow in df, return a character vector showing the full set of tax_ranks
+#' @description Needed by functions that convert tax_names to QIIME (or other) format.
+#' @param taxaRow a list of one row in the dataframe (the one you want to convert)
+#' @param df dataframe that contains all the taxa
+#' @export
 full_taxa<- function(df,taxaRow){
   # taxaRow: list
-  # # given a row taxaRow in df, return a character vector showing the full set of tax_ranks
+  # #
   # taxaRow = as.data.frame(t(taxaRow))
   # parent = as.numeric(taxaRow[match("parent",names(df))])#taxaRow[2])
   # taxName = taxaRow[,match("tax_name",names(df))] #taxaRow[5]
