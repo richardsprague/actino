@@ -4,7 +4,9 @@
 \name{kombucha.csv}
 \alias{kombucha.csv}
 \title{microbiome data available to ub.phyloseq}
-\format{An object of class \code{data.frame} with 277 rows and 7 columns.}
+\format{
+An object of class \code{data.frame} with 277 rows and 7 columns.
+}
 \usage{
 data(kombucha.csv)
 }

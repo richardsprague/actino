@@ -1,7 +1,7 @@
 Package: actino
 Type: Package
 Title: Phyloseq utilities for personal microbiome
-Version: 0.1.12
+Version: 0.1.13
 Author: Richard Sprague
 Authors@R: person("Richard", "Sprague", email = "sprague@ubiome.com",
   role = c("aut", "cre"))
@@ -18,6 +18,6 @@ Imports:
     readxl,
     utils,
     Hmisc
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.2
 Suggests: testthat
 Depends: R (>= 2.10)

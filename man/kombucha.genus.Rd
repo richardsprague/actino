@@ -4,7 +4,9 @@
 \name{kombucha.genus}
 \alias{kombucha.genus}
 \title{microbiome data available to ub.phyloseq}
-\format{An object of class \code{phyloseq} of length 1.}
+\format{
+An object of class \code{phyloseq} of length 1.
+}
 \usage{
 data(kombucha.genus)
 }

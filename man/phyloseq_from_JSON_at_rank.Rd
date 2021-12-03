@@ -4,8 +4,12 @@
 \alias{phyloseq_from_JSON_at_rank}
 \title{return a valid Phyloseq object created from the JSON files in flist and an Excel formatted mapfile}
 \usage{
-phyloseq_from_JSON_at_rank(flist, mapfile, rank = "genus",
-  count.normalized = FALSE)
+phyloseq_from_JSON_at_rank(
+  flist,
+  mapfile,
+  rank = "genus",
+  count.normalized = FALSE
+)
 }
 \arguments{
 \item{flist}{character vector of file names}
